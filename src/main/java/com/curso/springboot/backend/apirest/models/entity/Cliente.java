@@ -30,6 +30,8 @@ public class Cliente implements Serializable {
     @NotNull
     private Date createAt;
 
+    private String foto;
+
     public Cliente(){}
 
     public Cliente(Long id, String nombre, String apellido, String email, Date createAt) {
@@ -44,6 +46,14 @@ public class Cliente implements Serializable {
     public void prePersist(){
         createAt = new Date();
     }*/
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
 
     public Long getId() {
         return id;
