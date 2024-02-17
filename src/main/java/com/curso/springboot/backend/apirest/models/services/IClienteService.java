@@ -1,6 +1,7 @@
 package com.curso.springboot.backend.apirest.models.services;
 
 import com.curso.springboot.backend.apirest.models.entity.Cliente;
+import com.curso.springboot.backend.apirest.models.entity.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,5 +19,7 @@ public interface IClienteService {
     public Cliente save(Cliente cliente);
 
     public void delete(long id);
+
+    public List<Region> findAllRegiones();
 
 }

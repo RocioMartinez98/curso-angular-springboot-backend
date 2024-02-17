@@ -1,6 +1,7 @@
 package com.curso.springboot.backend.apirest.controller;
 
 import com.curso.springboot.backend.apirest.models.entity.Cliente;
+import com.curso.springboot.backend.apirest.models.entity.Region;
 import com.curso.springboot.backend.apirest.models.services.IClienteService;
 import com.curso.springboot.backend.apirest.models.services.IUploadFileService;
 import jakarta.validation.Valid;
@@ -124,6 +125,7 @@ public class ClienteRestController {
             clienteActual.setNombre(cliente.getNombre());
             clienteActual.setEmail(cliente.getEmail());
             clienteActual.setCreateAt(cliente.getCreateAt());
+            clienteActual.setRegion(cliente.getRegion());
 
             clienteActuaizado = clienteService.save(clienteActual);
         }catch(DataAccessException e){
@@ -199,6 +201,11 @@ public class ClienteRestController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"");
         return new ResponseEntity<Resource>(recurso, httpHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/clientes/regiones")
+    public List<Region> listarRegiones(){
+        return clienteService.findAllRegiones();
     }
 
 
