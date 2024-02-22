@@ -4,12 +4,10 @@ import com.curso.springboot.backend.apirest.models.entity.Cliente;
 import com.curso.springboot.backend.apirest.models.entity.Region;
 import com.curso.springboot.backend.apirest.models.services.IClienteService;
 import com.curso.springboot.backend.apirest.models.services.IUploadFileService;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,18 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.HttpHandler;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import javax.print.attribute.standard.PresentationDirection;
-import java.io.File;
+
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,6 +50,7 @@ public class ClienteRestController {
         return clienteService.findAll(pageable);
     }
 
+    @Secured({"ROLE_USER","ROLE_ADMIN"})
     @GetMapping("/clientes/{id}")
     public ResponseEntity<?> show(@PathVariable long id){
         Cliente cliente = null;
@@ -74,6 +70,7 @@ public class ClienteRestController {
         return new ResponseEntity<Cliente>(cliente,HttpStatus.OK);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/clientes")
     public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result){
         Cliente clienteNew = null;
@@ -100,8 +97,9 @@ public class ClienteRestController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
+    @Secured("ROLE_ADMIN")
     @PutMapping("/clientes/{id}")
-    public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente,BindingResult result ,@PathVariable Long id){
+    public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, BindingResult result , @PathVariable Long id){
         Cliente clienteActual = clienteService.findById(id);;
         Cliente clienteActuaizado = null;
         Map<String, Object> response = new HashMap<>();
@@ -138,6 +136,7 @@ public class ClienteRestController {
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/clientes/{id}")
     public ResponseEntity<?> delete(@PathVariable long id){
         Cliente clienteActual = clienteService.findById(id);
@@ -166,6 +165,7 @@ public class ClienteRestController {
 
     }
 
+    @Secured({"ROLE_USER","ROLE_ADMIN"})
     @PostMapping("/clientes/upload")
     public ResponseEntity<?> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("id") Long id){
         Map<String,Object> response = new HashMap<>();
@@ -203,6 +203,7 @@ public class ClienteRestController {
         return new ResponseEntity<Resource>(recurso, httpHeaders, HttpStatus.OK);
     }
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/clientes/regiones")
     public List<Region> listarRegiones(){
         return clienteService.findAllRegiones();
